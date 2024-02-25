@@ -1,3 +1,4 @@
 {
-  "PRIVATEHOME": "/user/home"
+  "PRIVATEHOME": "/user/home",
+  "LOGIN": "/"
 }

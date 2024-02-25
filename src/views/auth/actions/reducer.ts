@@ -1,3 +1,4 @@
+import { ErrorResponse } from "react-router-dom";
 import isEmpty from "../../../utils/IsEmpty";
 import {
   AUTH_LOADING_ENDS,
@@ -8,10 +9,10 @@ import {
 } from "./types";
 
 export interface AuthState {
-  loginError: {};
+  loginError: object | string;
   authLoading: boolean;
   user: {};
-  errors: {};
+  errors?: ErrorResponse;
   isAuthenticated: boolean;
   successResponse: string;
 }
@@ -20,7 +21,7 @@ const init: AuthState = {
   isAuthenticated: false,
   user: {},
   authLoading: false,
-  errors: {},
+  errors: null,
   loginError: {},
   successResponse: "",
 };

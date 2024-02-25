@@ -26,7 +26,7 @@ export const setCurrentUser = (decoded: any) => {
   };
 };
 
-const service_url = "process.env.SERVICE_URL";
+const service_url = import.meta.env.VITE_BASE_URL;
 
 export const loginUser = (
   userData: ILogin
@@ -36,7 +36,7 @@ export const loginUser = (
       userData;
       dispatch({ type: AUTH_LOADING_STARTS });
       const response = await axios.post<ILoginResponse>(
-        `${service_url}/login`,
+        `${service_url}/auth/login`,
         userData
       );
       const { token } = response.data;
@@ -47,13 +47,10 @@ export const loginUser = (
       dispatch(setCurrentUser(decoded));
       dispatch({ type: AUTH_LOADING_ENDS });
     } catch (error: ErrorResponse | any) {
+      console.log(error);
       dispatch({ type: AUTH_LOADING_ENDS });
       if (error.response) {
-        if (error.response.status === 422) {
-          dispatch({ type: GET_AUTH_ERROR, payload: error.response });
-        } else if (error.response.status === 400) {
-          dispatch({ type: GET_AUTH_ERROR, payload: error.response });
-        } else if (error.response.status === 500) {
+        if (error.response.status !== 500) {
           dispatch({ type: GET_AUTH_ERROR, payload: error.response });
         } else {
           dispatch({
@@ -102,4 +99,9 @@ export const registerUser = (
       // }
     }
   };
+};
+
+export const logoutUser = () => () => {
+  localStorage.clear();
+  window.location.href = ROUTE.LOGIN;
 };

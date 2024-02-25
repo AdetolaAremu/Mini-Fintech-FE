@@ -27,15 +27,15 @@ const Login = () => {
 
   return (
     <>
-      <form className="" onClick={handleSubmit}>
-        {errors !== "" && (
-          <div className="bg-red-600 my-3 rounded-md px-2 text-white">
-            Something went wrong
+      <form onSubmit={handleSubmit}>
+        {errors && (
+          <div className="bg-red-600 my-3 rounded-md px-2 text-white py-2">
+            {typeof errors === "string" ? errors : errors.data.message}
           </div>
         )}
         <input
           className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded"
-          type="text"
+          type="email"
           placeholder="Email Address"
           onChange={handleChange}
           value={Inputs.email}
@@ -49,14 +49,6 @@ const Login = () => {
           value={Inputs.password}
           name="password"
         />
-        <div className="mt-4 flex justify-end font-semibold text-sm">
-          <a
-            className="text-blue-600 hover:text-blue-700 hover:underline hover:underline-offset-4"
-            href="#"
-          >
-            Forgot Password?
-          </a>
-        </div>
         <div className="text-center md:text-left">
           <button
             disabled={authLoading === true}

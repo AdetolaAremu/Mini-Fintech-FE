@@ -1,8 +1,12 @@
 import { useState } from "react";
 import Modal from "../../components/Modal";
+import { useTypedSelector } from "../../utils/Hook";
 
 const Home = () => {
   const [modal, setModal] = useState(false);
+
+  const { user } = useTypedSelector((state) => state.auth);
+  console.log(user);
 
   const toggleModal = () => {
     setModal(!modal);
