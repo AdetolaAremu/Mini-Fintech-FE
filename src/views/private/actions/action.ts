@@ -38,6 +38,8 @@ export const transferToAnotherUser = (
 
       dispatch({ type: GET_MODAL_DATA, payload: response.data });
 
+      dispatch(getBalance());
+
       dispatch({ type: MODAL_LOADING_STARTS, payload: false });
     } catch (error: ErrorResponse | any) {
       if (error.response) {
