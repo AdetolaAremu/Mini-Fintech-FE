@@ -21,3 +21,34 @@ export interface ILoggedInUserInfo {
 export interface IAllUsers {
   user: LoggedInUser[];
 }
+
+export interface IGetBalance {
+  balance: number;
+}
+
+interface transaction {
+  _id: string;
+  user: string;
+  amount: number;
+  transactionID: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface transactionDebit {
+  _id: string;
+  user: string;
+  amount: number;
+  toUser: string;
+  transactionID: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IGetAllCredits {
+  credit: transaction[];
+}
+
+export interface IGetAllDebits {
+  debit: transactionDebit[];
+}

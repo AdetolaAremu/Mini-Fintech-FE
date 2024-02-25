@@ -1,29 +1,53 @@
-import { IAllUsers, ILoggedInUserInfo } from "../../../types/PrivateType";
 import {
+  IAllUsers,
+  IGetAllCredits,
+  IGetAllDebits,
+  IGetBalance,
+  ILoggedInUserInfo,
+} from "../../../types/PrivateType";
+import { ErrorResponse } from "../../../types/response/ErrorResponse";
+import { TransferResponse } from "../../../types/response/PrivateResponse";
+import {
+  GET_ALL_CREDITS,
+  GET_ALL_DEBITS,
   GET_ALL_USERS,
+  GET_BALANCE,
   GET_DATA,
   GET_ERRORS,
   GET_LOGGED_IN_USER,
+  GET_MODAL_DATA,
+  GET_MODAL_ERRORS,
   LOADING_ENDS,
   LOADING_STARTS,
+  MODAL_LOADING_STARTS,
 } from "./types";
 
 export interface PrivateState {
-  modalError: object;
+  modalError: ErrorResponse;
   loading: boolean;
   getData: object | string[];
-  errors?: object | string;
+  errors?: ErrorResponse;
   loggedInUser: ILoggedInUserInfo;
   allUsers: IAllUsers;
+  getModalData: TransferResponse;
+  modalLoading: boolean;
+  getBalanceData: IGetBalance;
+  getAllCredit: IGetAllCredits;
+  getAllDebit: IGetAllDebits;
 }
 
 const init: PrivateState = {
   getData: {},
   loading: false,
   errors: null,
-  modalError: {},
+  modalError: null,
   loggedInUser: null,
   allUsers: null,
+  getModalData: null,
+  modalLoading: false,
+  getBalanceData: null,
+  getAllCredit: null,
+  getAllDebit: null,
 };
 
 const privateReducer = (state = init, action: any) => {
@@ -57,6 +81,36 @@ const privateReducer = (state = init, action: any) => {
       return {
         ...state,
         allUsers: action.payload,
+      };
+    case GET_MODAL_DATA:
+      return {
+        ...state,
+        getModalData: action.payload,
+      };
+    case MODAL_LOADING_STARTS:
+      return {
+        ...state,
+        modalLoading: action.payload,
+      };
+    case GET_MODAL_ERRORS:
+      return {
+        ...state,
+        modalError: action.payload,
+      };
+    case GET_BALANCE:
+      return {
+        ...state,
+        getBalanceData: action.payload,
+      };
+    case GET_ALL_CREDITS:
+      return {
+        ...state,
+        getAllCredit: action.payload,
+      };
+    case GET_ALL_DEBITS:
+      return {
+        ...state,
+        getAllDebit: action.payload,
       };
     default:
       return state;

@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { useAppDispatch } from "../utils/Hook";
+import { useAppDispatch, useTypedSelector } from "../utils/Hook";
 import { logoutUser } from "../views/auth/actions/action";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
+  const { getBalanceData } = useTypedSelector((state) => state.private);
 
   const callLogoutUser = () => {
     dispatch(logoutUser());
@@ -19,7 +20,7 @@ const Navbar = () => {
             type="button"
             className="text-white bg-blue-700 hover:bg-blue-800 mr-4 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Balance: 1000
+            Balance: {getBalanceData?.balance}
           </button>
           <button
             onClick={callLogoutUser}

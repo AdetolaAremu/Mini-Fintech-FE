@@ -40,3 +40,50 @@ export interface LoggedInUser {
 export interface AllUsers {
   data: User[];
 }
+
+export interface TransferResponse {
+  message: string;
+  debitTransaction: {
+    user: string;
+    toUser: string;
+    amount: number;
+    transactionID: string;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: string;
+  };
+}
+
+export interface GetBalanceResponse {
+  data: {
+    balance: number;
+  };
+}
+
+interface credit {
+  _id: string;
+  user: string;
+  amount: number;
+  transactionID: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface debit {
+  _id: string;
+  user: string;
+  amount: number;
+  transactionID: string;
+  createdAt: string;
+  updatedAt: string;
+  toUser?: string;
+}
+
+export interface CreditResponse {
+  credit: credit[];
+}
+
+export interface DebitResponse {
+  debit: debit[];
+}

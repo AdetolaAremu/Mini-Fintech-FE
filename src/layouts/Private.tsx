@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { logoutUser } from "../views/auth/actions/action";
 import { useAppDispatch } from "../utils/Hook";
-import { getLoggedInUser } from "../views/private/actions/action";
+import { getBalance, getLoggedInUser } from "../views/private/actions/action";
 
 const Private = () => {
   const allAuths = useSelector((state: RootState) => state.auth);
@@ -17,6 +17,7 @@ const Private = () => {
 
   useEffect(() => {
     dispatch(getLoggedInUser());
+    dispatch(getBalance());
 
     if (!allAuths) {
       navigate("/");

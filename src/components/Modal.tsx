@@ -5,6 +5,7 @@ import {
   getAllUsers,
   transferToAnotherUser,
 } from "../views/private/actions/action";
+import { GET_MODAL_DATA } from "../views/private/actions/types";
 
 export interface IModal {
   modal: boolean;
@@ -19,7 +20,7 @@ const initialState: ITransferToUser = {
 const Modal = ({ modal, onClose }: IModal) => {
   const [Inputs, setInputs] = React.useState(initialState);
 
-  const { errors, loading, allUsers } = useTypedSelector(
+  const { modalError, modalLoading, allUsers, getModalData } = useTypedSelector(
     (state) => state.private
   );
 
@@ -38,7 +39,13 @@ const Modal = ({ modal, onClose }: IModal) => {
 
   React.useEffect(() => {
     dispatch(getAllUsers());
-  }, [dispatch]);
+
+    if (getModalData) {
+      Inputs.amount = 0;
+      Inputs.toUser = "";
+      dispatch({ type: GET_MODAL_DATA, payload: null });
+    }
+  }, [dispatch, getModalData]);
 
   return (
     <div>
@@ -60,9 +67,17 @@ const Modal = ({ modal, onClose }: IModal) => {
                 Transfer money to your friends
               </div>
 
-              {errors !== null && (
-                <div className="mt-3 bg-red-600 text-white p-1 rounded text-center">
-                  An error occured
+              {modalError && (
+                <div className="bg-red-600 my-3 rounded-md px-2 text-white py-2">
+                  {typeof modalError === "string"
+                    ? modalError
+                    : modalError?.response?.data.message}
+                </div>
+              )}
+
+              {getModalData && (
+                <div className="bg-green-600 my-3 rounded-md px-2 text-white py-2">
+                  {getModalData.message}
                 </div>
               )}
 
@@ -93,13 +108,26 @@ const Modal = ({ modal, onClose }: IModal) => {
                 />
 
                 <div className="flex justify-center">
-                  <button
-                    disabled={loading === true}
-                    type="submit"
-                    className="bg-blue-700 hover:bg-blue-600 w-full text-white font-bold py-1 rounded-md"
-                  >
-                    Transfer
-                  </button>
+                  <div>
+                    <button
+                      onClick={onClose}
+                      disabled={modalLoading}
+                      type="submit"
+                      className="bg-red-700 hover:bg-red-600 w-44 mr-3 text-white font-bold py-1 rounded-md"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  <div className="">
+                    <button
+                      disabled={modalLoading}
+                      type="submit"
+                      className="bg-blue-700 hover:bg-blue-600 w-44 text-white font-bold py-1 rounded-md"
+                    >
+                      Transfer
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
