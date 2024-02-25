@@ -1,7 +1,10 @@
 import React, { ChangeEvent } from "react";
 import { ITransferToUser } from "../types/PrivateType";
 import { useAppDispatch, useTypedSelector } from "../utils/Hook";
-import { transferToAnotherUser } from "../views/private/actions/action";
+import {
+  getAllUsers,
+  transferToAnotherUser,
+} from "../views/private/actions/action";
 
 export interface IModal {
   modal: boolean;
@@ -16,13 +19,14 @@ const initialState: ITransferToUser = {
 const Modal = ({ modal, onClose }: IModal) => {
   const [Inputs, setInputs] = React.useState(initialState);
 
-  const { errors, loading } = useTypedSelector((state) => state.private);
+  const { errors, loading, allUsers } = useTypedSelector(
+    (state) => state.private
+  );
 
   const dispatch = useAppDispatch();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(Inputs);
     dispatch(transferToAnotherUser(Inputs));
   };
 
@@ -31,6 +35,11 @@ const Modal = ({ modal, onClose }: IModal) => {
   ) => {
     setInputs({ ...Inputs, [e.target.name]: e.target.value });
   };
+
+  React.useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
+
   return (
     <div>
       <div
@@ -51,10 +60,6 @@ const Modal = ({ modal, onClose }: IModal) => {
                 Transfer money to your friends
               </div>
 
-              <div className="mt-1 text-gray-400 text-center">
-                Fill in the details below to complete your upload
-              </div>
-
               {errors !== null && (
                 <div className="mt-3 bg-red-600 text-white p-1 rounded text-center">
                   An error occured
@@ -66,13 +71,16 @@ const Modal = ({ modal, onClose }: IModal) => {
                   onChange={handleChange}
                   value={Inputs.toUser}
                   name="toUser"
-                  className="bg-gray-300 w-full py-2 rounded-md pl-3"
+                  className=" border border-solid border-gray-300 w-full py-2 rounded-md pl-3"
                 >
                   <option value="" disabled defaultValue={""}>
                     Select User
                   </option>
-                  <option value="00000000009">Shamsi</option>
-                  <option value="11111111">Pali Mi</option>
+                  {allUsers?.user.map((el) => (
+                    <option className="capitalize" key={el._id} value={el._id}>
+                      {el.firstName + " " + el.lastName}
+                    </option>
+                  ))}
                 </select>
 
                 <input
@@ -80,7 +88,7 @@ const Modal = ({ modal, onClose }: IModal) => {
                   value={Inputs.amount}
                   name="amount"
                   type="number"
-                  className="bg-gray-300 w-full py-2 rounded-md pl-3 mt-6 mb-6"
+                  className="border border-solid border-gray-300 w-full py-2 rounded-md pl-3 mt-6 mb-6"
                   placeholder="Enter Amount"
                 />
 

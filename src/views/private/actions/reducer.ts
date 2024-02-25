@@ -1,5 +1,6 @@
-import { ILoggedInUserInfo } from "../../../types/PrivateType";
+import { IAllUsers, ILoggedInUserInfo } from "../../../types/PrivateType";
 import {
+  GET_ALL_USERS,
   GET_DATA,
   GET_ERRORS,
   GET_LOGGED_IN_USER,
@@ -13,6 +14,7 @@ export interface PrivateState {
   getData: object | string[];
   errors?: object | string;
   loggedInUser: ILoggedInUserInfo;
+  allUsers: IAllUsers;
 }
 
 const init: PrivateState = {
@@ -21,6 +23,7 @@ const init: PrivateState = {
   errors: null,
   modalError: {},
   loggedInUser: null,
+  allUsers: null,
 };
 
 const privateReducer = (state = init, action: any) => {
@@ -49,6 +52,11 @@ const privateReducer = (state = init, action: any) => {
       return {
         ...state,
         loggedInUser: action.payload,
+      };
+    case GET_ALL_USERS:
+      return {
+        ...state,
+        allUsers: action.payload,
       };
     default:
       return state;

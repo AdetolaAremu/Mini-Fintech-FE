@@ -8,7 +8,7 @@ const Home = () => {
   const { loggedInUser } = useTypedSelector(
     (state: RootState) => state.private
   );
-  console.log(loggedInUser.user, "loggedin");
+
   const toggleModal = () => {
     setModal(!modal);
   };
@@ -20,7 +20,11 @@ const Home = () => {
           <div className="">
             <div className="capitalize">
               Welcome back,{" "}
-              {loggedInUser.user.firstName + " " + loggedInUser.user.lastName}
+              {loggedInUser
+                ? loggedInUser?.user.firstName +
+                  " " +
+                  loggedInUser?.user.lastName
+                : ""}
             </div>
           </div>
           <button

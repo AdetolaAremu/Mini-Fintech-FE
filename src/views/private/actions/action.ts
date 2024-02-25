@@ -2,8 +2,14 @@ import { ThunkAction } from "redux-thunk";
 import { ITransferToUser } from "../../../types/PrivateType";
 import { ErrorResponse } from "../../../types/response/ErrorResponse";
 import { RootState } from "../../../store/RootReducer";
-import { GET_ERRORS, GET_LOGGED_IN_USER, LOADING_STARTS } from "./types";
 import {
+  GET_ALL_USERS,
+  GET_ERRORS,
+  GET_LOGGED_IN_USER,
+  LOADING_STARTS,
+} from "./types";
+import {
+  AllUsers,
   IResponseTransferToUser,
   LoggedInUser,
 } from "../../../types/response/PrivateResponse";
@@ -135,6 +141,33 @@ export const getLoggedInUser = (): ThunkAction<
       );
 
       dispatch({ type: GET_LOGGED_IN_USER, payload: response.data.data });
+    } catch (error: ErrorResponse | any) {
+      if (error.response) {
+        if (error.response.status !== 500) {
+          dispatch({ type: GET_ERRORS, payload: error.response });
+        } else {
+          dispatch({
+            type: GET_ERRORS,
+            payload: "Sorry, something went wrong!",
+          });
+        }
+      }
+    }
+  };
+};
+
+export const getAllUsers = (): ThunkAction<
+  Promise<void>,
+  RootState,
+  unknown,
+  any
+> => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: LOADING_STARTS });
+      const response = await axiosInstance.get<AllUsers>(`/users/all`);
+
+      dispatch({ type: GET_ALL_USERS, payload: response.data.data });
     } catch (error: ErrorResponse | any) {
       if (error.response) {
         if (error.response.status !== 500) {

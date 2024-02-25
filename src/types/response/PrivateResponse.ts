@@ -18,17 +18,25 @@ export interface IResponseTransferToUser {
   data: Partial<IDebitTransaction>;
 }
 
+interface User {
+  user: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: string;
+  };
+}
+
 export interface LoggedInUser {
   data: {
-    user: {
-      _id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      username: string;
-      createdAt: string;
-      updatedAt: string;
-      __v: string;
-    };
+    user: User;
   };
+}
+
+export interface AllUsers {
+  data: User[];
 }
