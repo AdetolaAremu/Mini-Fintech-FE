@@ -1,10 +1,18 @@
-import { GET_DATA, GET_ERRORS, LOADING_ENDS, LOADING_STARTS } from "./types";
+import { ILoggedInUserInfo } from "../../../types/PrivateType";
+import {
+  GET_DATA,
+  GET_ERRORS,
+  GET_LOGGED_IN_USER,
+  LOADING_ENDS,
+  LOADING_STARTS,
+} from "./types";
 
 export interface PrivateState {
   modalError: object;
   loading: boolean;
   getData: object | string[];
   errors?: object | string;
+  loggedInUser: ILoggedInUserInfo;
 }
 
 const init: PrivateState = {
@@ -12,6 +20,7 @@ const init: PrivateState = {
   loading: false,
   errors: null,
   modalError: {},
+  loggedInUser: null,
 };
 
 const privateReducer = (state = init, action: any) => {
@@ -35,6 +44,11 @@ const privateReducer = (state = init, action: any) => {
       return {
         ...state,
         getData: action.payload,
+      };
+    case GET_LOGGED_IN_USER:
+      return {
+        ...state,
+        loggedInUser: action.payload,
       };
     default:
       return state;

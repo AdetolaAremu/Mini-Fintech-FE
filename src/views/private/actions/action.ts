@@ -2,11 +2,15 @@ import { ThunkAction } from "redux-thunk";
 import { ITransferToUser } from "../../../types/PrivateType";
 import { ErrorResponse } from "../../../types/response/ErrorResponse";
 import { RootState } from "../../../store/RootReducer";
-import { LOADING_STARTS } from "./types";
-import { IResponseTransferToUser } from "../../../types/response/PrivateResponse";
+import { GET_ERRORS, GET_LOGGED_IN_USER, LOADING_STARTS } from "./types";
+import {
+  IResponseTransferToUser,
+  LoggedInUser,
+} from "../../../types/response/PrivateResponse";
 import axios from "axios";
+import axiosInstance from "../../../utils/AxiosInterceptor";
 
-const service_url = "process.env.SERVICE_URL";
+const service_url = import.meta.env.VITE_BASE_URL;
 
 export const transferToAnotherUser = (
   userData: ITransferToUser
@@ -113,6 +117,35 @@ export const getTransactionHistory = (
       //     });
       //   }
       // }
+    }
+  };
+};
+
+export const getLoggedInUser = (): ThunkAction<
+  Promise<void>,
+  RootState,
+  unknown,
+  any
+> => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: LOADING_STARTS });
+      const response = await axiosInstance.get<LoggedInUser>(
+        `/users/logged-in-user`
+      );
+
+      dispatch({ type: GET_LOGGED_IN_USER, payload: response.data.data });
+    } catch (error: ErrorResponse | any) {
+      if (error.response) {
+        if (error.response.status !== 500) {
+          dispatch({ type: GET_ERRORS, payload: error.response });
+        } else {
+          dispatch({
+            type: GET_ERRORS,
+            payload: "Sorry, something went wrong!",
+          });
+        }
+      }
     }
   };
 };

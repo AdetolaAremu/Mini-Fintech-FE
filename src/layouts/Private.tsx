@@ -4,18 +4,34 @@ import Home from "../views/private/Home";
 import Transaction from "../views/private/Transaction";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/RootReducer";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { logoutUser } from "../views/auth/actions/action";
+import { useAppDispatch } from "../utils/Hook";
+import { getLoggedInUser } from "../views/private/actions/action";
 
 const Private = () => {
   const allAuths = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  // Check if the user is authenticated
-  if (!allAuths.user) {
-    // Redirect to the login page if the user is not authenticated
-    navigate("/");
-    // Return null to prevent rendering the rest of the component
-    return null;
-  }
+  useEffect(() => {
+    dispatch(getLoggedInUser());
+
+    if (!allAuths) {
+      navigate("/");
+    } else {
+      const token = localStorage.getItem("jwtToken");
+      if (token) {
+        const decodedToken: any = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp && currentTime > decodedToken.exp) {
+          dispatch(logoutUser());
+          navigate("/");
+        }
+      }
+    }
+  }, [allAuths.isAuthenticated, dispatch, navigate]);
   return (
     <div className="bg-gray-200 h-screen">
       <Navbar />
