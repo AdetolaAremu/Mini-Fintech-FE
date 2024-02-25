@@ -47,7 +47,6 @@ export const loginUser = (
       dispatch(setCurrentUser(decoded));
       dispatch({ type: AUTH_LOADING_ENDS });
     } catch (error: ErrorResponse | any) {
-      console.log(error);
       dispatch({ type: AUTH_LOADING_ENDS });
       if (error.response) {
         if (error.response.status !== 500) {
@@ -71,7 +70,7 @@ export const registerUser = (
       userData;
       dispatch({ type: AUTH_LOADING_STARTS });
       const response = await axios.post<IRegistrationResponse>(
-        `${service_url}/login`,
+        `${service_url}/auth/register`,
         userData
       );
 
@@ -80,23 +79,19 @@ export const registerUser = (
           type: GET_SUCCESS_RESPONSE,
           payload: response.data.message,
         });
-      // window.location.href = ROUTE.PRIVATEHOME;
       dispatch({ type: AUTH_LOADING_ENDS });
     } catch (error: ErrorResponse | any) {
-      // dispatch({ type: AUTH_LOADING_ENDS });
-      // if (error.response) {
-      //   if (error.response.status === 422) {
-      //     dispatch({ type: GET_AUTH_ERROR, payload: error.response });
-      //   } else if (error.response.status === 400) {
-      //     dispatch({ type: GET_AUTH_ERROR, payload: error.response });
-      //   } else if (error.response.status === 500) {
-      //   } else {
-      //     dispatch({
-      //       type: GET_AUTH_ERROR,
-      //       payload: "Sorry, something went wrong!",
-      //     });
-      //   }
-      // }
+      dispatch({ type: AUTH_LOADING_ENDS });
+      if (error.response) {
+        if (error.response.status !== 500) {
+          dispatch({ type: GET_AUTH_ERROR, payload: error.response });
+        } else {
+          dispatch({
+            type: GET_AUTH_ERROR,
+            payload: "Sorry, something went wrong!",
+          });
+        }
+      }
     }
   };
 };

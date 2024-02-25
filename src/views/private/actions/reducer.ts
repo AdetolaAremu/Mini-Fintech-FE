@@ -1,12 +1,14 @@
 import {
   IAllUsers,
-  IGetAllCredits,
-  IGetAllDebits,
   IGetBalance,
   ILoggedInUserInfo,
 } from "../../../types/PrivateType";
 import { ErrorResponse } from "../../../types/response/ErrorResponse";
-import { TransferResponse } from "../../../types/response/PrivateResponse";
+import {
+  CreditResponse,
+  DebitResponse,
+  TransferResponse,
+} from "../../../types/response/PrivateResponse";
 import {
   GET_ALL_CREDITS,
   GET_ALL_DEBITS,
@@ -32,8 +34,8 @@ export interface PrivateState {
   getModalData: TransferResponse;
   modalLoading: boolean;
   getBalanceData: IGetBalance;
-  getAllCredit: IGetAllCredits;
-  getAllDebit: IGetAllDebits;
+  getAllCredit: CreditResponse;
+  getAllDebit: DebitResponse;
 }
 
 const init: PrivateState = {

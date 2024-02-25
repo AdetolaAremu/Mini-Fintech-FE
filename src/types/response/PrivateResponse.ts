@@ -81,9 +81,9 @@ interface debit {
 }
 
 export interface CreditResponse {
-  credit: credit[];
+  data: { credit: credit[] };
 }
 
 export interface DebitResponse {
-  debit: debit[];
+  data: { debit: debit[] };
 }

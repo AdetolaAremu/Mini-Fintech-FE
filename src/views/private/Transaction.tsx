@@ -1,60 +1,95 @@
+import React, { useState } from "react";
+import { useAppDispatch, useTypedSelector } from "../../utils/Hook";
+import { getAllCredits, getAllDebits } from "./actions/action";
+import { format } from "date-fns";
+
 const Transaction = () => {
+  const [CheckType, useCheckType] = useState("credit");
+  const dispatch = useAppDispatch();
+  const { getAllCredit, getAllDebit } = useTypedSelector(
+    (state) => state.private
+  );
+
+  console.log(getAllDebit?.data?.debit.map((el) => el, "adfad"));
+
+  const changeType = () => {
+    if (CheckType === "credit") useCheckType("debit");
+    if (CheckType === "debit") useCheckType("credit");
+  };
+
+  React.useEffect(() => {
+    dispatch(getAllCredits());
+    dispatch(getAllDebits());
+  }, [dispatch]);
+
   return (
     <>
       <div className="flex justify-center pt-20">
         <div className="bg-white w-3/4 rounded-md p-3">
+          <div className="flex justify-center mb-3">
+            <button
+              onClick={changeType}
+              className="bg-green-700 text-white px-4 mr-2 py-1 rounded-md"
+            >
+              Credit
+            </button>
+            <button
+              onClick={changeType}
+              className="bg-red-700 text-white px-4 mr-2 py-1 rounded-md"
+            >
+              Debit
+            </button>
+          </div>
           <div className="relative overflow-x-auto">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
+                  {CheckType === "debit" && (
+                    <th scope="col" className="px-6 py-3">
+                      To
+                    </th>
+                  )}
+
                   <th scope="col" className="px-6 py-3">
-                    Product name
+                    Amount
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Color
+                    Reference
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Category
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Price
+                    Date
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Apple MacBook Pro 17"
-                  </th>
-                  <td className="px-6 py-4">Silver</td>
-                  <td className="px-6 py-4">Laptop</td>
-                  <td className="px-6 py-4">$2999</td>
-                </tr>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Microsoft Surface Pro
-                  </th>
-                  <td className="px-6 py-4">White</td>
-                  <td className="px-6 py-4">Laptop PC</td>
-                  <td className="px-6 py-4">$1999</td>
-                </tr>
-                <tr className="bg-white dark:bg-gray-800">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Magic Mouse 2
-                  </th>
-                  <td className="px-6 py-4">Black</td>
-                  <td className="px-6 py-4">Accessories</td>
-                  <td className="px-6 py-4">$99</td>
-                </tr>
+                {CheckType === "credit" &&
+                  getAllCredit?.data.credit.map((el) => (
+                    <tr
+                      key={el._id}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                      <td className="px-6 py-4">{el?.amount}</td>
+                      <td className="px-6 py-4">{el?.transactionID}</td>
+                      <td className="px-6 py-4">
+                        {format(new Date(el?.createdAt), "yyyy-MM-dd HH:mm:ss")}
+                      </td>
+                    </tr>
+                  ))}
+
+                {CheckType === "debit" &&
+                  getAllDebit?.data?.debit.map((el) => (
+                    <tr
+                      key={el._id}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                      <td className="px-6 py-4">{el?.toUser || "-"}</td>
+                      <td className="px-6 py-4">{el?.amount}</td>
+                      <td className="px-6 py-4">{el?.transactionID}</td>
+                      <td className="px-6 py-4">
+                        {format(new Date(el?.createdAt), "yyyy-MM-dd HH:mm:ss")}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

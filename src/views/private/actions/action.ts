@@ -263,8 +263,8 @@ export const getAllDebits = (): ThunkAction<
     try {
       dispatch({ type: LOADING_STARTS });
 
-      const response = await axiosInstance.get<DebitResponse>(`/credits`);
-
+      const response = await axiosInstance.get<DebitResponse>(`/debits`);
+      console.log(response.data.data, "res");
       dispatch({ type: GET_ALL_DEBITS, payload: response.data });
 
       dispatch({ type: LOADING_STARTS, payload: false });
