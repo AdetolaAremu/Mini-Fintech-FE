@@ -9,7 +9,7 @@ export interface RootState {
   private: PrivateState;
 }
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   auth: authReducer,
   private: privateReducer,
 });
